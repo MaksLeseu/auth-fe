@@ -1,24 +1,22 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {Content} from "./Content";
+import {Navigate, Route, Routes} from "react-router-dom";
+import {Login} from "./Login";
+import {Registration} from "./Registration";
+import {Header} from "./Header";
 
-function App() {
+const App = () => {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+      <Routes>
+        <Route path={'/'} element={<Content />} />
+        <Route path={'/login'} element={<Login />} />
+        <Route path={'/registration'} element={<Registration />} />
+        <Route path='*' element={<Navigate to={'/404'} />} />
+        <Route path={'/404'} element={<h1>404: Page Not Found!</h1>} />
+      </Routes>
     </div>
   );
 }
