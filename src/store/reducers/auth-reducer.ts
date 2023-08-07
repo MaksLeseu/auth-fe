@@ -1,4 +1,4 @@
-import {authApi, usersApi} from "../../api/api";
+import {authApi, config, setToken, usersApi} from "../../api/api";
 import {LoginType} from "../../Login";
 import {RegistrationType} from "../../Registration";
 
@@ -89,7 +89,10 @@ export const getUsersTC: any = () => (dispatch: any) => {
 export const loginTC: any = (data: LoginType) => (dispatch: any) => {
     authApi.login(data)
         .then((res) => {
-            if (res) dispatch(changeIsLoggedInAC(true))
+            if (res) {
+                setToken(res.data.token)
+                dispatch(changeIsLoggedInAC(true))
+            }
         })
         .catch((err) => {
             dispatch(errorsAC(err.response.data.message))
