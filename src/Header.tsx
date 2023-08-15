@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppStateType} from "./store/store";
 import {changeUrlAC} from "./store/reducers/header-reducer";
 import {Dispatch} from "redux";
+import {logoutTC} from "./store/reducers/auth-reducer";
 
 export const Header = () => {
     const urlValue = useSelector<AppStateType, string | null>(state => state.header.value)
@@ -25,13 +26,17 @@ export const Header = () => {
         if (urlPath) dispatch(changeUrlAC(urlPath))
     }
 
+    const func = () => {
+        dispatch(logoutTC())
+    }
+
     return (
         <div className={'header'}>
             <div className={'header__container'}>
                 <p>Server</p>
                 <NavLink
                     to={`/${urlPath}`}
-                    onClick={changeUrlValue}
+                    onClick={func}
                     className={'header__container-button'}
                 >{registrStr || loginStr || outStr}</NavLink>
             </div>

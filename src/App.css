@@ -214,11 +214,6 @@ h1, h2, h3, h4, h5, h6 {
   transition: 0.5s;
 }
 
-
-.login__checkbox {
-
-}
-
 .login__checkbox-container {
   display: flex;
   margin-bottom: 20px;
@@ -286,5 +281,11 @@ h1, h2, h3, h4, h5, h6 {
   transform: translate(0px, -10px);
   background-color: #d5d4d4;
   box-shadow: 1px 1px 5px black;
+}
+
+.username {
+  margin-bottom: 40px;
+  font-size: 30px;
+  font-weight: 500;
 }
 

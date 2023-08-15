@@ -1,26 +1,45 @@
 import axios from "axios";
 import {LoginType} from "../Login";
 import {RegistrationType} from "../Registration";
-
-type ConfigType = {
-    headers: {Authorization: string}
-}
+import {_saveToken, loadToken} from "../common/localStorage/localStorage";
 
 const instance = axios.create({
-    baseURL: 'http://localhost:5000/auth/',
+    baseURL: 'http://localhost:5000/auth/jwt/',
+    withCredentials: true
 })
 
 
+instance.interceptors.request.use(config => {
+    config.headers.Authorization = `Bearer ${loadToken()}`
+    return config
+}, error => {
+    return Promise.reject(error)
+})
 
-export const config: ConfigType = {
-    headers: {
-        Authorization: ''
+instance.interceptors.response.use(config => {
+        return config
+    }, async error => {
+        const originRequest = error.config
+        if (error.response.status === 401 && error.config && !error.config._isRetry) {
+            originRequest._isRetry = true
+            try {
+                const response = await authApi.refresh()
+                _saveToken(response.data.userData.accessToken)
+                return instance.request(originRequest)
+            } catch (e) {
+                console.log('Not Auth')
+            }
+        }
+        throw error
     }
-}
+)
 
 export const usersApi = {
     getUsers() {
-        return instance.get('users', config)
+        return instance.get('users')
+    },
+    username() {
+        return instance.get('username')
     }
 }
 
@@ -30,12 +49,15 @@ export const authApi = {
     },
     login(data: LoginType) {
         return instance.post('login', data)
-    }
+    },
+    logout() {
+        return instance.post('logout')
+    },
+    refresh() {
+        return instance.get('refresh')
+    },
 }
 
-export const setToken = (token: string) => {
-    config.headers.Authorization = `Bearer ${token}`
-}
 
 
 
